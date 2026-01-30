@@ -158,9 +158,180 @@ All routers are configured with console, VTY, and enable authentication.
 ---
 
 
+
+---
+
+## Visual References
+
+For additional screenshots, configuration examples, and simulation results, please refer to the `images` folder included in this repository. These images provide step-by-step visual guidance and verification for the network setup and testing.
+
+---
+
 ## How to Run the Project
 
 1. Install Cisco Packet Tracer
 2. Open the provided pb.pkt file
 3. Inspect router and switch configurations
 4. Use PC command prompt to test connectivity
+
+---
+
+## Appendix: General Cisco CLI Commands Used
+
+This section lists commonly used Cisco IOS commands for configuring VLANs, inter-VLAN routing, DHCP, dynamic routing, and basic security in a hierarchical network.
+
+### 1. Basic Device Setup (Router / Switch)
+```
+enable
+configure terminal
+hostname <DEVICE_NAME>
+no ip domain-lookup
+```
+
+### 2. VLAN Creation (Switch)
+```
+vlan <VLAN_ID>
+ name <VLAN_NAME>
+exit
+```
+**Example:**
+```
+vlan 2
+ name VLAN-A
+```
+
+### 3. Assigning Access Ports to VLANs
+```
+interface <INTERFACE_ID>
+ switchport mode access
+ switchport access vlan <VLAN_ID>
+ spanning-tree portfast
+exit
+```
+**Example:**
+```
+interface fa0/2
+ switchport mode access
+ switchport access vlan 2
+```
+
+### 4. Configuring Trunk Ports
+```
+interface <INTERFACE_ID>
+ switchport mode trunk
+ switchport trunk allowed vlan <VLAN_LIST>
+exit
+```
+**Example:**
+```
+interface fa0/1
+ switchport mode trunk
+ switchport trunk allowed vlan 2,3
+```
+
+### 5. Router-on-a-Stick (Inter-VLAN Routing)
+```
+interface <PHYSICAL_INTERFACE>.<VLAN_ID>
+ encapsulation dot1Q <VLAN_ID>
+ ip address <GATEWAY_IP> <SUBNET_MASK>
+exit
+```
+**Example:**
+```
+interface fa0/0.2
+ encapsulation dot1Q 2
+ ip address 192.168.2.1 255.255.255.0
+```
+
+### 6. Assigning IP Address to Router Interface
+```
+interface <INTERFACE_ID>
+ ip address <IP_ADDRESS> <SUBNET_MASK>
+ no shutdown
+exit
+```
+
+### 7. Serial Interface Configuration
+```
+interface <SERIAL_INTERFACE>
+ ip address <IP_ADDRESS> <SUBNET_MASK>
+ clock rate 64000     ! only on DCE side
+ no shutdown
+exit
+```
+
+### 8. DHCP Configuration (Router)
+**Exclude Gateway Address:**
+```
+ip dhcp excluded-address <START_IP> <END_IP>
+```
+**Create DHCP Pool:**
+```
+ip dhcp pool <POOL_NAME>
+ network <NETWORK_ADDRESS> <SUBNET_MASK>
+ default-router <GATEWAY_IP>
+exit
+```
+**Example:**
+```
+ip dhcp pool SUBNET80
+ network 192.168.80.0 255.255.255.0
+ default-router 192.168.80.1
+```
+
+### 9. Dynamic Routing Configuration (RIPv2)
+```
+router rip
+ version 2
+ no auto-summary
+ network <NETWORK_ADDRESS>
+exit
+```
+**Example:**
+```
+router rip
+ version 2
+ no auto-summary
+ network 192.168.2.0
+ network 192.169.1.0
+```
+
+### 10. Router Security Configuration
+**Enable Password:**
+```
+enable secret <PASSWORD>
+```
+**Console Password:**
+```
+line console 0
+ password <PASSWORD>
+ login
+exit
+```
+**VTY (Remote Access) Password:**
+```
+line vty 0 4
+ password <PASSWORD>
+ login
+exit
+```
+
+### 11. Saving Configuration
+```
+write memory
+```
+or
+```
+copy running-config startup-config
+```
+
+### 12. Verification Commands
+```
+show ip interface brief
+show vlan brief
+show interfaces trunk
+show ip route
+show ip protocols
+ping <DESTINATION_IP>
+traceroute <DESTINATION_IP>
+```
