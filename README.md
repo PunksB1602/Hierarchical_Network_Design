@@ -157,10 +157,6 @@ All routers are configured with console, VTY, and enable authentication.
 
 ---
 
-
-
----
-
 ## Visual References
 
 For additional screenshots, configuration examples, and simulation results, please refer to the `images` folder included in this repository. These images provide step-by-step visual guidance and verification for the network setup and testing.
