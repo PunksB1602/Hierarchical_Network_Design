@@ -13,7 +13,7 @@ This project demonstrates the design, configuration, and simulation of a hierarc
 
 ## Network Architecture Overview
 
-![Network Topology Diagram](images/Picture0.png)
+![Network Topology Diagram](images/image1.png)
 
 The network follows the three-tier hierarchical model:
 
